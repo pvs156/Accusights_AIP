@@ -1,0 +1,53 @@
+# Render Blueprint for AccuSights Full-Stack App
+# This file deploys both frontend and backend to Render.com
+
+services:
+  # Backend API (FastAPI)
+  - type: web
+    name: accusights-backend
+    env: python
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///./policy_writer.db
+      - key: CORS_ORIGINS
+        fromService:
+          type: web
+          name: accusights-frontend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: GENERATED_POLICIES_DIR
+        value: ./generated_policies
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  # Frontend (React + Vite)
+  - type: web
+    name: accusights-frontend
+    env: static
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: true
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: accusights-backend
+          envVarKey: RENDER_EXTERNAL_URL
+
+# Optional: Add PostgreSQL database (recommended for production)
+# databases:
+#   - name: accusights-db
+#     plan: free
+#     databaseName: accusights
+#     user: accusights
+

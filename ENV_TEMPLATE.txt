@@ -1,0 +1,17 @@
+# Environment Variables Template
+# Copy this file to backend/.env and customize as needed
+
+# Database Configuration
+DATABASE_URL=sqlite:///./policy_writer.db
+
+# CORS Configuration (comma-separated list of allowed origins)
+CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+
+# Generated Policies Directory
+GENERATED_POLICIES_DIR=./generated_policies
+
+# Optional: For production deployments
+# DATABASE_URL=postgresql://user:password@localhost/policywriter
+# CORS_ORIGINS=https://yourdomain.com
+# SECRET_KEY=your-secret-key-here
+
